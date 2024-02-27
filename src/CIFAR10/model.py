@@ -4,12 +4,17 @@ architecture
 """
 from torch import nn
 import torch.nn.functional as F
-from config import Config
 
 
 class NeuralNetwork(nn.Module):
     def __init__(self, config):
+        # Parent
         super(NeuralNetwork, self).__init__()
+
+        # Attributes
+        self.config = config
+
+        # Build the layers
         self.conv0 = nn.Conv2d(in_channels=3, out_channels=8, kernel_size=(3, 3), stride=1)
         self.conv1 = nn.Conv2d(in_channels=8, out_channels=32, kernel_size=(3, 3), stride=1)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3), stride=1)
@@ -21,6 +26,9 @@ class NeuralNetwork(nn.Module):
         self.linear1 = nn.Linear(256, 128)
         self.linear2 = nn.Linear(128, 64)
         self.linear3 = nn.Linear(64, 10)
+
+        # Send to device
+        self.to(config.device)
 
     def forward(self, x, targets):
         x = self.conv0(x)
@@ -49,4 +57,3 @@ class NeuralNetwork(nn.Module):
         if targets is not None:
             loss = F.cross_entropy(logits, targets)
         return logits, loss
-

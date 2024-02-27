@@ -1,6 +1,7 @@
 """
 Class responsible for holding the project's configuration
 """
+import torch
 
 
 class Config:
@@ -8,5 +9,11 @@ class Config:
         self.num_epochs = 5
         self.batch_size = 64
         self.learning_rate = 0.1
-        self.train = True;
         self.data_path = "../data/"
+        self.device = (
+            'cuda'
+            if torch.cuda.is_available()
+            else 'mps'
+            if torch.backends.mps.is_available()
+            else 'cpu'
+        )

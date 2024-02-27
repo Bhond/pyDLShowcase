@@ -1,61 +1,82 @@
 """
 Class responsible for holding the training and testing
 """
-from config import Config
+import torch
+from torch import nn
+from torch.utils.data import DataLoader
+from tqdm import tqdm
+from src.CIFAR10.dataset import CIFAR10Dataset
+import os
+
 
 class Trainer:
-    def __init__(self, config):
-        print("Ctor")
+    def __init__(self, config, model):
+        """
+        Ctor
+        Handles configuring the trainer
+        :param config: The project's configuration
+        """
+        self.config = config
+        self.model = model
+        self.training_dataset = CIFAR10Dataset(config, True)
+        self.testing_dataset = CIFAR10Dataset(config, False)
+        self.loss_fn = nn.CrossEntropyLoss()
+        self.optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate)
 
-    def train(self):
-        print("Train method")
+    def run(self):
+        """
+        Responsible for training the neural network and testing it
+        """
+        for epoch in range(self.config.num_epochs):
+            print(f"Epoch {epoch + 1}\n-------------------------------")
+            self.train(self.training_dataset, self.model, self.optimizer)
+            self.test(self.testing_dataset, self.model)
 
+    def train(self, dataset, model, optimizer):
+        """
+        Training method
+        :param dataset:
+        :param model:
+        :param optimizer:
+        :return:
+        """
+        dataloader = DataLoader(dataset, self.config.batch_size)
+        size = len(dataset)
+        loss = 0.0
+        model.train()
+        for batch, (X, y) in enumerate(dataloader):
+            # Forward pass
+            pred, loss = model.forward(X, y)
+            # Backward
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+            if batch % 100 == 0:
+                loss, current = loss.item(), batch * self.config.batch_size + len(X)
+                print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]\r")
 
-#
-# # Define training loop
-# def trainingLoop(dataloader, model, lossFn, optimizer):
-#     size = len(dataloader.dataset)
-#     # Set the model to training mode, check tutorial for full description of what this line does
-#     model.train()
-#     # Start loop: retrieves the batch idx, the data, the label
-#     for batch, (X, y) in enumerate(dataloader):
-#         # Forward pass
-#         pred = model.forward(X)
-#         # Retrieve loss
-#         loss = lossFn(pred, y)
-#         # Backward
-#         loss.backward()
-#         optimizer.step()
-#         optimizer.zero_grad()
-#         # Add print -> Copied
-#         if batch % 100 == 0:
-#             loss, current = loss.item(), batch * batchSize + len(X)
-#             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
-#
-#
-# # Define testing loop
-# def testingLoop(dataloader, model, lossFn):
-#     size = len(dataloader.dataset)
-#     numBatches = len(dataloader)
-#     testLoss, correct = 0, 0
-#     # Set the model to evaluation mode, check tutorial for full description of what this line does
-#     model.eval()
-#     # Start loop: retrieves the data, the label
-#     with torch.no_grad():
-#         for X, y in dataloader:
-#             # Forward pass
-#             pred = model.forward(X)
-#             # Loss
-#             testLoss += lossFn(pred, y).item()
-#             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-#             # Compute score and display it
-#             testLoss /= numBatches
-#             correct /= size
-#             print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {testLoss:>8f}")
-#
-#
-# # Combine the loops
-# for epoch in range(epochs):
-#     print(f"Epoch {epoch + 1}\n-------------------------------")
-#     trainingLoop(trainingDataloader, model, lossFn, optimizer)
-#     testingLoop(testingDataloader, model, lossFn)
+    def test(self, dataset, model):
+        """
+        Testing method
+        :param dataset:
+        :param model:
+        :return:
+        """
+        dataloader = DataLoader(dataset, self.config.batch_size)
+        size = len(dataset)
+        num_batches = len(dataloader)
+        test_loss, correct = 0, 0
+        # Set the model to evaluation mode, check tutorial for full description of what this line does
+        model.eval()
+        # Start loop: retrieves the data, the label
+        with torch.no_grad():
+            for X, y in dataloader:
+                # Forward pass
+                pred, loss = model.forward(X, y)
+                # Loss
+                test_loss += loss
+                correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+                # Compute score and display it
+                test_loss /= num_batches
+                correct /= size
+                print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f}")

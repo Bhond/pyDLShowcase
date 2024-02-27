@@ -1,10 +1,10 @@
 """
 Entry file for the CIFAR10 project
 """
-from dataset import *
 from model import *
 from trainer import *
 from config import *
+
 
 def main():
     """
@@ -16,9 +16,9 @@ def main():
         - Run the trainer
     """
     config = Config()
-    cifar10Dataset = CIFAR10Dataset(config)
     model = NeuralNetwork(config)
-    trainer = Trainer(config)
+    trainer = Trainer(config, model)
+    trainer.run()
 
 
 if __name__ == "__main__":

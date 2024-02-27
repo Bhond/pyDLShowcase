@@ -6,14 +6,14 @@ from torchvision.transforms import ToTensor
 
 # Load datasets
 trainingData = datasets.FashionMNIST(
-    root='data',
+    root='../data',
     train=True,
     transform=ToTensor(),
     download=True
 )
 
 testingData = datasets.FashionMNIST(
-    root='data',
+    root='../data',
     train=False,
     transform=ToTensor(),
     download=True
