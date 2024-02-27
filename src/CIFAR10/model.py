@@ -1,8 +1,14 @@
+"""
+Class responsible for holding the neural network's
+architecture
+"""
 from torch import nn
 import torch.nn.functional as F
+from config import Config
+
 
 class NeuralNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         super(NeuralNetwork, self).__init__()
         self.conv0 = nn.Conv2d(in_channels=3, out_channels=8, kernel_size=(3, 3), stride=1)
         self.conv1 = nn.Conv2d(in_channels=8, out_channels=32, kernel_size=(3, 3), stride=1)
@@ -43,3 +49,4 @@ class NeuralNetwork(nn.Module):
         if targets is not None:
             loss = F.cross_entropy(logits, targets)
         return logits, loss
+

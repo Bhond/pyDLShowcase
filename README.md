@@ -12,9 +12,9 @@ It uses the FashionMNIST's dataset, and it has been almost completely been
 implemented along the Pytorch's tutorial.
 
 ## CIFAR10
-This one is an introduction to computer vision. The goal is to learn 
+This one is an introduction to computer vision. The goal is to learn how
 to implement ConvNets.
 
 ## YOLO
 This one will be an introduction to computer vision. The goal is to learn
-to predict to recognize features on a camera feed. In coming...
+how to predict to recognize features on a camera feed. In coming...
