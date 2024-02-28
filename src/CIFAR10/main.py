@@ -9,7 +9,6 @@ from config import *
 def main():
     """
     Main method responsible for dispatching the work:
-        - Create the configuration
         - Create the dataset
         - Create the model
         - Create the trainer

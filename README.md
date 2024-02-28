@@ -14,6 +14,8 @@ implemented along the Pytorch's tutorial.
 ## CIFAR10
 This one is an introduction to computer vision. The goal is to learn how
 to implement ConvNets.
+It runs. Don't know if the learning is working because I don't have a decent GPU. 
+Pending testing...
 
 ## YOLO
 This one will be an introduction to computer vision. The goal is to learn
