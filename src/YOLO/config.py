@@ -7,7 +7,7 @@ class Config:
     """
 
     def __init__(self):
-        self.num_epochs = 5
+        self.num_epochs = 1
         self.batch_size = 64
         self.learning_rate = 0.1
         self.data_path = "../data/"

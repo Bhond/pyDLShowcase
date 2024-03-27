@@ -1,6 +1,7 @@
 """
 Class responsible for holding the training and testing
 """
+import torch
 
 
 class Trainer:
@@ -10,6 +11,8 @@ class Trainer:
         Handles configuring the trainer
         :param config: The project's configuration
         """
+        self.config = config
+        self.model = model
 
     def run(self):
         """
@@ -21,7 +24,8 @@ class Trainer:
             self.test()
 
     def train(self):
-       print("Train")
+        test = torch.rand(3, 448, 448)
+        self.model.forward(test)
 
     def test(self):
         print("Test")
