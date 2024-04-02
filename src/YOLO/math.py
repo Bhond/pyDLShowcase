@@ -47,7 +47,7 @@ def nms(boxes,threshold_iou,threshold):
     """
     # Sort boxes according to their confidence
     sorted_boxes = [box for box in boxes if box[4] > threshold]
-    sorted_boxes = sorted(sorted_boxes, key=lambda x: x[4], reverse=True)
+    sorted_boxes = sorted(sorted_boxes,key=lambda x: x[4],reverse=True)
     keep = []
     while sorted_boxes:
         candidate = sorted_boxes.pop(0)
@@ -55,7 +55,20 @@ def nms(boxes,threshold_iou,threshold):
         boxes = [
             box
             for box in boxes
-            if iou(candidate, box) < threshold_iou
+            if candidate[4] != box[4] or iou(candidate,box) < threshold_iou
         ]
         keep.append(candidate)
     return keep
+
+
+def mAP(prediction,ground_truth,iou_threshold,n_classes=20):
+    """
+    Compute Mean Average Precision
+    :param prediction: Predicted boxes
+    :param ground_truth: Ground truth boxes
+    :param iou_threshold: IoU threshold
+    :param n_classes: Number of classes
+    :return: The mean average precision score across all classes given a specific IoU threshold
+    """
+    # List of the precisions
+    average_precisions = []

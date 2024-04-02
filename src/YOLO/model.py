@@ -82,7 +82,6 @@ class YoloV1(YoloVn):
                     in_channels = conv2[1]
 
         self.model = nn.Sequential(*layers)
-        summary(self.model, (3, 448, 448))
         self.fl0 = nn.Linear(in_features=1024 * 7 * 7,out_features=4096)
         self.leaky = nn.LeakyReLU(0.1)
         self.dropout = nn.Dropout(0.5)
@@ -95,6 +94,7 @@ class YoloV1(YoloVn):
         x = self.dropout(x)
         x = self.leaky(x)
         x = self.fl1(x)
+        # In paper, no activation is used here
         x = x.view(30,7,7)
         return x
 

@@ -8,7 +8,7 @@ class Config:
     def __init__(self):
         self.num_epochs = 5
         self.batch_size = 64
-        self.learning_rate = 0.1
+        self.learning_rate = .1
         self.data_path = "../data/"
         self.device = (
             'cuda'
